@@ -1,0 +1,21 @@
+# Guaranty Backend
+
+## Objectif
+
+Ce code permet de faire tourner la partie backend de Guaranty, pour cela il utilise le framework Adonis.
+Pour lancer le container, il faut exécuter :
+
+```
+docker compose up
+```
+puis
+```
+docker exec -it <container_api_id> bash
+node ace migration:run
+```
+
+pour relancer
+
+```
+docker-compose down -v 
+```
