@@ -29,5 +29,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
+  @column()
+  declare emailVerified: boolean
+
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }
