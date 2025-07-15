@@ -1,11 +1,13 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
-export default class WarrantyTickets extends BaseSchema {
-  protected tableName = 'warranty_tickets'
+export default class extends BaseSchema {
+  protected tableName = 'update_warranties'
 
-  public async up() {
+  async up() {
+    this.schema.dropTableIfExists(this.tableName)
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.string('product_name').nullable()
       table.string('brand').nullable()
       table.date('purchase_date').nullable()
@@ -21,7 +23,7 @@ export default class WarrantyTickets extends BaseSchema {
     })
   }
 
-  public async down() {
+  async down() {
     this.schema.dropTable(this.tableName)
   }
 }

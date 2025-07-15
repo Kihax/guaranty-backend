@@ -8,6 +8,7 @@ import VerifyEmailNotification from '#mails/verify_email_notification'
 import EmailVerificationToken from '#models/email_verification_token'
 import mail from '@adonisjs/mail/services/main'
 import { Exception } from '@adonisjs/core/exceptions'
+import crypto from 'node:crypto'
 
 export default class AuthController {
   public async register({ request }: HttpContext) {
@@ -76,35 +77,39 @@ export default class AuthController {
     }
   }
 
-  public async verifyEmail({ request, response }: HttpContext) {
-    const token = request.input('token')
-    const verificationToken = await EmailVerificationToken.query()
-      .where('token', token)
-      .where('expiresAt', '>', DateTime.now())
-      .first()
+  public async googleLogin({ request, auth, response }: HttpContext) {
+    const { idToken } = request.only(['idToken'])
 
-    if (!verificationToken) {
-      throw new Exception('Token de vérification invalide ou expiré', { status: 400 })
-    }
+    try {
+      const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
+      if (!googleRes.ok) {
+        throw new Error('Invalid token')
+      }
+      const data = await googleRes.json()
+      const { email, name } = data
 
-    const user = await User.find(verificationToken.userId)
-    if (!user) {
-      throw new Exception('Utilisateur non trouvé', { status: 404 })
-    }
+      const user = await User.firstOrCreate(
+        { email },
+        {
+          fullName: name,
+          password: crypto.randomUUID(),
+          emailVerified: true,
+        }
+      )
 
-    user.emailVerified = true
-    await user.save()
+      const token = await User.accessTokens.create(user)
 
-    // Supprimer le token de vérification après utilisation
-    await verificationToken.delete()
-
-    return {
-      message: 'Adresse e-mail vérifiée avec succès',
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-      },
+      return {
+        message: 'Connexion réussie',
+        token: token,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+        },
+      }
+    } catch (error) {
+      return response.unauthorized({ message: 'Token Google invalide' })
     }
   }
 }

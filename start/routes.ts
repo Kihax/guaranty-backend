@@ -18,17 +18,39 @@ router.get('/test', async () => {
   }
 })
 
-router.post('/login', [AuthController, 'login'])
-router.post('/register', [AuthController, 'register'])
-router.get('/verify-email', [AuthController, 'verifyEmail'])
-router.post('/logout', [AuthController, 'logout']).use(
-  middleware.auth({
-    guards: ['api'],
-  })
-)
+router
+  .group(() => {
+    // Public routes
+    router
+      .group(() => {
+        /* section publique et avec préfixe domaine/api/auth/... */
+        router.post('/login', [AuthController, 'login'])
+        router.post('/register', [AuthController, 'register'])
+        router.get('/verify-email', [AuthController, 'verifyEmail'])
 
-router.get('/items', [ItemsController, 'getAllItems']).use(
-  middleware.auth({
-    guards: ['api'],
+        router.post('/logout', [AuthController, 'logout']).use(
+          // lien sécurisé
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
+      })
+      .prefix('/auth')
+
+    router
+      .group(() => {
+        /* section sécurisée et avec le préfixe domaine/api/items/... */
+        router.get('/get', [ItemsController, 'getAllItems'])
+        router.post('/store', [ItemsController, 'store'])
+        router.get('/image/:id', [ItemsController, 'image'])
+        router.post('/update/:id', [ItemsController, 'update'])
+        router.get('/get/:id', [ItemsController, 'get'])
+      })
+      .prefix('/items')
+      .use(
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
   })
-)
+  .prefix('/api')
