@@ -3,9 +3,9 @@ import User from '#models/user'
 import edge from 'edge.js'
 import Env from '#start/env'
 
-export default class VerifyEmailNotification extends BaseMail {
+export default class ResetPasswordNotification extends BaseMail {
   from = 'guaranty.open@gmail.com'
-  subject = 'Confirmez votre adresse e-mail'
+  subject = 'Réinitialisation du mot de passe'
 
   constructor(
     private user: User,
@@ -14,10 +14,14 @@ export default class VerifyEmailNotification extends BaseMail {
     super()
   }
 
+  /**
+   * The "prepare" method is called automatically when
+   * the email is sent or queued.
+   */
   async prepare() {
-    const verificationUrl = `${Env.get('APP_URL')}/api/auth/verify-email?token=${this.token}`
+    const verificationUrl = `${Env.get('APP_URL')}/auth/reset-password?token=${this.token}`
 
-    const html = await edge.render('emails/verify_email', {
+    const html = await edge.render('emails/reset_password', {
       user: this.user,
       url: verificationUrl,
     })

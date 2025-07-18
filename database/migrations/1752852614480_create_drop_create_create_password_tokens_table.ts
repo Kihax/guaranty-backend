@@ -1,11 +1,11 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'update_warranties' // nom de la mauvaise table
+  protected tableName = 'create_password_tokens'
 
-  public async up() {
+  async up() {
     this.schema.dropTable(this.tableName)
   }
 
-  public async down() {}
+  async down() {}
 }
