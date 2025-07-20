@@ -79,11 +79,13 @@ export default class AuthController {
     }
   }
 
-  public async googleLogin({ request, auth, response }: HttpContext) {
+  public async loginWithGoogle({ request, auth, response }: HttpContext) {
     const { idToken } = request.only(['idToken'])
 
     try {
-      const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`)
+      const googleRes = await fetch(
+        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${idToken}`
+      )
       if (!googleRes.ok) {
         throw new Error('Invalid token')
       }
@@ -116,7 +118,7 @@ export default class AuthController {
   }
 
   public async verifyEmail({ request, response, params }: HttpContext) {
-    const { token } = params.token || ""
+    const { token } = params.token || ''
 
     if (!token) {
       return response.badRequest({ message: 'Token manquant' })
@@ -213,6 +215,16 @@ export default class AuthController {
 
     return {
       message: 'Mot de passe réinitialisé avec succès',
+    }
+  }
+
+  public async getUser({ auth }: HttpContext) {
+    const user = await auth.getUserOrFail()
+    return {
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      emailVerified: user.emailVerified,
     }
   }
 }

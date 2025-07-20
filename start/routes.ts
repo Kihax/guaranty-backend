@@ -33,8 +33,15 @@ router
             guards: ['api'],
           })
         )
+        router.post('/login-with-google', [AuthController, 'loginWithGoogle'])
         router.post('/forgot-password', [AuthController, 'forgotPassword'])
         router.post('/reset-password', [AuthController, 'resetPassword'])
+        router.get('/user', [AuthController, 'getUser']).use(
+          // lien sécurisé
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
         router.post('/logout', [AuthController, 'logout']).use(
           // lien sécurisé
           middleware.auth({

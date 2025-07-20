@@ -1,19 +1,14 @@
-FROM node:20
+FROM node:20-alpine
 
-# Définir le dossier de travail
 WORKDIR /home/node/app
 
-# Copier uniquement les fichiers nécessaires pour installer les dépendances
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Installer les dépendances
-RUN npm install
-
-# Copier tous les autres fichiers (code, config, etc.)
 COPY . .
 
-# Exposer le port par défaut d'AdonisJS
+RUN npm run build
+
 EXPOSE 3333
 
-# Lancer le serveur Adonis en mode développement
-CMD ["node", "ace", "serve", "--watch"]
+CMD ["node", "build/server.js"]
