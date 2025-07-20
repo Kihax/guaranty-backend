@@ -90,7 +90,7 @@ export default class AuthController {
         throw new Error('Invalid token')
       }
       const data = await googleRes.json()
-      const { email, name } = data
+      const { email, name } = data as { email: string; name: string }
 
       const user = await User.firstOrCreate(
         { email },
@@ -126,7 +126,7 @@ export default class AuthController {
 
     const verificationToken = await EmailVerificationToken.query()
       .where('token', token)
-      .where('expiresAt', '>', DateTime.now())
+      .where('expiresAt', '>', DateTime.now().toJSDate())
       .first()
 
     if (!verificationToken) {
@@ -199,7 +199,7 @@ export default class AuthController {
 
     const resetToken = await PasswordResetToken.query()
       .where('token', token)
-      .where('expiresAt', '>', DateTime.now())
+      .where('expiresAt', '>', DateTime.now().toJSDate())
       .first()
 
     if (!resetToken) {
