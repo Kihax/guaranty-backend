@@ -30,7 +30,7 @@ export default class AuthController {
     }
   }
 
-  public async login({ request, response, auth }: HttpContext) {
+  public async login({ request }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
 
     // 1. Vérifie si l’utilisateur existe
@@ -79,7 +79,7 @@ export default class AuthController {
     }
   }
 
-  public async loginWithGoogle({ request, auth, response }: HttpContext) {
+  public async loginWithGoogle({ request, response }: HttpContext) {
     const { idToken } = request.only(['idToken'])
 
     try {
@@ -117,7 +117,7 @@ export default class AuthController {
     }
   }
 
-  public async verifyEmail({ request, response, params }: HttpContext) {
+  public async verifyEmail({ response, params }: HttpContext) {
     const { token } = params.token || ''
 
     if (!token) {

@@ -29,12 +29,12 @@ export default class ItemsController {
       schema: createWarrantyTicketValidator,
       data: request.all(),
     })
-    const { purchase_date, ...restPayload } = payload
+    const { purchase_date: purchaseDate } = payload
 
-    const warrantyExpiryDate = DateTime.fromJSDate(purchase_date).plus({
+    const warrantyExpiryDate = DateTime.fromJSDate(purchaseDate).plus({
       months: payload.warranty_duration_months,
     })
-    const purchaseDateLuxon = DateTime.fromJSDate(purchase_date)
+    const purchaseDateLuxon = DateTime.fromJSDate(purchaseDate)
 
     const receipt = request.file('receipt', {
       size: '2mb',
@@ -81,6 +81,10 @@ export default class ItemsController {
       return response.unauthorized({ message: 'Accès interdit ou ticket inexistant.' })
     }
 
+    if (!ticket.receiptUrl) {
+      return response.notFound({ message: 'Aucun ticket de caisse associé.' })
+    }
+
     // Chemin absolu du fichier
     const filePath = path.join(app.makePath('public'), ticket.receiptUrl)
 
@@ -97,12 +101,12 @@ export default class ItemsController {
       schema: createWarrantyTicketValidator,
       data: request.all(),
     })
-    const { purchase_date, ...restPayload } = payload
+    const { purchase_date: purchaseDate, ...restPayload } = payload
 
-    const warrantyExpiryDate = DateTime.fromJSDate(purchase_date).plus({
+    const warrantyExpiryDate = DateTime.fromJSDate(purchaseDate).plus({
       months: payload.warranty_duration_months,
     })
-    const purchaseDateLuxon = DateTime.fromJSDate(purchase_date)
+    const purchaseDateLuxon = DateTime.fromJSDate(purchaseDate)
 
     if (warrantyExpiryDate <= DateTime.now()) {
       return response.badRequest({
