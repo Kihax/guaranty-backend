@@ -48,7 +48,15 @@ export default class AuthController {
       })
 
       await mail.send(new VerifyEmailNotification(user, token.token))
-      throw new Exception('Adresse e-mail non vérifiée', { status: 403 })
+      return {
+        message: 'Adresse mail non vérifiée',
+        token: token,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+        },
+      }
     }
 
     // 3. Vérifie le mot de passe
