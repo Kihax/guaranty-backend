@@ -125,9 +125,8 @@ export default class AuthController {
     }
   }
 
-  public async verifyEmail({ response, params }: HttpContext) {
-    console.log(params)
-    const { token } = params.token || ''
+  public async verifyEmail({ response, request }: HttpContext) {
+    const token = request.input('token')
 
     console.log(token)
 
