@@ -128,6 +128,8 @@ export default class AuthController {
   public async verifyEmail({ response, params }: HttpContext) {
     const { token } = params.token || ''
 
+    console.log(token)
+
     if (!token) {
       return response.badRequest({ message: 'Token manquant' })
     }
