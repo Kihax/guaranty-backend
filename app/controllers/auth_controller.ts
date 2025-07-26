@@ -25,8 +25,17 @@ export default class AuthController {
 
     await mail.send(new VerifyEmailNotification(user, token.token))
 
+    const userToken = await User.accessTokens.create(user)
+
     return {
       message: 'Inscription réussie. Vérifiez votre email.',
+      token: userToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        emailVerified: user.emailVerified,
+      },
     }
   }
 
@@ -55,6 +64,7 @@ export default class AuthController {
           id: user.id,
           email: user.email,
           fullName: user.fullName,
+          emailVerified: user.emailVerified,
         },
       }
     }
@@ -75,6 +85,7 @@ export default class AuthController {
         id: user.id,
         email: user.email,
         fullName: user.fullName,
+        emailVerified: user.emailVerified,
       },
     }
   }
@@ -127,8 +138,6 @@ export default class AuthController {
 
   public async verifyEmail({ response, request }: HttpContext) {
     const token = request.input('token')
-
-    console.log(token)
 
     if (!token) {
       return response.badRequest({ message: 'Token manquant' })
