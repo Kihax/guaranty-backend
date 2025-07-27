@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 const AuthController = () => import('#controllers/auth_controller')
+const ProfilePicturesController = () => import('#controllers/profile_pictures_controller')
 const ItemsController = () => import('#controllers/items_controller')
 import { middleware } from '#start/kernel'
 
@@ -48,7 +49,7 @@ router
             guards: ['api'],
           })
         )
-        router.post('/get-profile-picture', [AuthController, 'image']).use(
+        router.post('/get-profile-picture', [ProfilePicturesController, 'image']).use(
           // lien sécurisé
           middleware.auth({
             guards: ['api'],
