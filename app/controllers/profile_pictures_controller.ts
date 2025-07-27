@@ -30,9 +30,8 @@ export default class ProfilePicturesController {
     }
   }
 
-  async image({ params, response, auth }: HttpContext) {
+  async image({ response, auth }: HttpContext) {
     const user = await auth.getUserOrFail()
-    const id = user.id
 
     if (!user.profilePicture) {
       const filePath = path.join(app.makePath('public'), 'default-profile-picture.avif')

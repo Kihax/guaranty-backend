@@ -12,7 +12,6 @@ import crypto from 'node:crypto'
 import PasswordResetToken from '#models/password_reset_token'
 import ResetPasswordNotification from '#mails/reset_password_notification'
 import ProfilePicturesController from './profile_pictures_controller.js'
-import { profile } from 'node:console'
 import auth from '#config/auth'
 
 export default class AuthController {
@@ -96,9 +95,9 @@ export default class AuthController {
     }
   }
 
-  public async logout({ auth }: HttpContext) {
+  public async logout({ auth: authCtx }: HttpContext) {
     // Invalidate the current access token
-    await auth.use('api').invalidateToken()
+    await authCtx.use('api').invalidateToken()
     return {
       message: 'Déconnexion réussie',
     }
@@ -186,8 +185,8 @@ export default class AuthController {
     }
   }
 
-  public async resendVerificationEmail({ auth, response }: HttpContext) {
-    const user = await auth.getUserOrFail()
+  public async resendVerificationEmail({ auth: authCtx, response }: HttpContext) {
+    const user = await authCtx.getUserOrFail()
 
     if (user.emailVerified) {
       return response.badRequest({ message: 'Email déjà vérifié' })
@@ -254,8 +253,8 @@ export default class AuthController {
     }
   }
 
-  public async getUser({ auth }: HttpContext) {
-    const user = await auth.getUserOrFail()
+  public async getUser({ auth: authCtx }: HttpContext) {
+    const user = await authCtx.getUserOrFail()
     return {
       id: user.id,
       email: user.email,
