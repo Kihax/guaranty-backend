@@ -12,7 +12,6 @@ import crypto from 'node:crypto'
 import PasswordResetToken from '#models/password_reset_token'
 import ResetPasswordNotification from '#mails/reset_password_notification'
 import ProfilePicturesController from './profile_pictures_controller.js'
-import auth from '#config/auth'
 
 export default class AuthController {
   public async register({ request }: HttpContext) {
