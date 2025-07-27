@@ -2,12 +2,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 import path from 'node:path'
 import fs from 'node:fs'
 import app from '@adonisjs/core/services/app'
+import User from '#models/user'
 
 export default class ProfilePicturesController {
-  public static async update(url: string, auth: any) {
-    console.log('test')
-    const user = auth.user
-    console.log(`Updating profile picture for user ${user.id} with URL: ${url}`)
+  public static async update(url: string, user: User) {
     const res = await fetch(url)
     if (!res.ok) throw new Error('Failed to download image')
 

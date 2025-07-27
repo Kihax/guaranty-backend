@@ -131,8 +131,7 @@ export default class AuthController {
         user.profilePicture === undefined ||
         user.profilePicture === 'default-profile-picture.avif'
       ) {
-        console.log(picture)
-        await ProfilePicturesController.update(picture, auth)
+        await ProfilePicturesController.update(picture, user)
       }
 
       const token = await User.accessTokens.create(user)
