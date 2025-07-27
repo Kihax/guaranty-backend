@@ -11,6 +11,9 @@ import { Exception } from '@adonisjs/core/exceptions'
 import crypto from 'node:crypto'
 import PasswordResetToken from '#models/password_reset_token'
 import ResetPasswordNotification from '#mails/reset_password_notification'
+import ProfilePicturesController from './profile_pictures_controller.js'
+import { profile } from 'node:console'
+import auth from '#config/auth'
 
 export default class AuthController {
   public async register({ request }: HttpContext) {
@@ -35,6 +38,7 @@ export default class AuthController {
         email: user.email,
         fullName: user.fullName,
         emailVerified: user.emailVerified,
+        profilePicture: user.profilePicture || 'default-profile-picture.avif',
       },
     }
   }
@@ -65,6 +69,7 @@ export default class AuthController {
           email: user.email,
           fullName: user.fullName,
           emailVerified: user.emailVerified,
+          profilePicture: user.profilePicture || 'default-profile-picture.avif',
         },
       }
     }
@@ -86,6 +91,7 @@ export default class AuthController {
         email: user.email,
         fullName: user.fullName,
         emailVerified: user.emailVerified,
+        profilePicture: user.profilePicture || 'default-profile-picture.avif',
       },
     }
   }
@@ -109,7 +115,7 @@ export default class AuthController {
         throw new Error('Invalid token')
       }
       const data = await googleRes.json()
-      const { email, name } = data as { email: string; name: string }
+      const { email, name, picture } = data as { email: string; name: string; picture: string }
 
       const user = await User.firstOrCreate(
         { email },
@@ -119,6 +125,15 @@ export default class AuthController {
           emailVerified: true,
         }
       )
+      // If the user does not have a profile picture, update it
+      if (
+        user.profilePicture === null ||
+        user.profilePicture === '' ||
+        user.profilePicture === undefined ||
+        user.profilePicture === 'default-profile-picture.avif'
+      ) {
+        await ProfilePicturesController.update(picture, auth)
+      }
 
       const token = await User.accessTokens.create(user)
 
@@ -129,6 +144,8 @@ export default class AuthController {
           id: user.id,
           email: user.email,
           fullName: user.fullName,
+          emailVerified: user.emailVerified,
+          profilePicture: user.profilePicture || picture || 'default-profile-picture.avif',
         },
       }
     } catch (error) {

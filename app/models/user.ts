@@ -32,5 +32,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare emailVerified: boolean
 
+  @column()
+  public profilePicture?: string
+
   static accessTokens = DbAccessTokensProvider.forModel(User)
 }
