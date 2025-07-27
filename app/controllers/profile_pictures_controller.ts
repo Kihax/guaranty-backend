@@ -6,6 +6,7 @@ import app from '@adonisjs/core/services/app'
 export default class ProfilePicturesController {
   public static async update(url: string, auth: any) {
     const user = auth.user
+    console.log(`Updating profile picture for user ${user.id} with URL: ${url}`)
     const res = await fetch(url)
     if (!res.ok) throw new Error('Failed to download image')
 
