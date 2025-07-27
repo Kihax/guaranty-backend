@@ -48,6 +48,12 @@ router
             guards: ['api'],
           })
         )
+        router.post('/get-profile-picture', [AuthController, 'image']).use(
+          // lien sécurisé
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
       })
       .prefix('/auth')
 
