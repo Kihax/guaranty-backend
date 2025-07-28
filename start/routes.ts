@@ -49,7 +49,7 @@ router
             guards: ['api'],
           })
         )
-        router.post('/get-profile-picture', [ProfilePicturesController, 'image']).use(
+        router.get('/get-profile-picture', [ProfilePicturesController, 'image']).use(
           // lien sécurisé
           middleware.auth({
             guards: ['api'],

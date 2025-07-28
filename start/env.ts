@@ -46,4 +46,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   APP_URL: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring Spaces (DigitalOcean Spaces)
+  |----------------------------------------------------------
+  */
+  SPACES_KEY: Env.schema.string(),
+  SPACES_KEY_SECRET: Env.schema.string(),
+  SPACES_ENDPOINT: Env.schema.string({ format: 'url' }),
 })
