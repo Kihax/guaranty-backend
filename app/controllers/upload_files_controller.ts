@@ -1,9 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Drive from '@adonisjs/drive/services/drive'
+import drive from '@adonisjs/drive/services/main'
 
 export default class UploadFilesController {
   public static async uploadFile(file: File) {
-    const drive = Drive.use('s3')
+
 
     drive
       .use('spaces')
@@ -20,7 +20,6 @@ export default class UploadFilesController {
   }
 
   public static async downloadFile({ response }: HttpContext, fileName: string) {
-    const drive = Drive.use('s3')
     const file = await drive.use('spaces').get(fileName)
     if (!file) {
       return response.notFound({ message: 'File not found' })
