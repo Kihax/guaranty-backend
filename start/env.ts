@@ -49,20 +49,13 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
-  | Variables for configuring Spaces (DigitalOcean Spaces)
-  |----------------------------------------------------------
-  */
-  SPACES_KEY: Env.schema.string(),
-  SPACES_KEY_SECRET: Env.schema.string(),
-  SPACES_ENDPOINT: Env.schema.string({ format: 'url' }),
-
-  /*
-  |----------------------------------------------------------
   | Variables for configuring the drive package
   |----------------------------------------------------------
   */
   DRIVE_DISK: Env.schema.enum(['fs', 'spaces'] as const),
   SPACES_SECRET: Env.schema.string(),
   SPACES_REGION: Env.schema.string(),
-  SPACES_BUCKET: Env.schema.string()
+  SPACES_BUCKET: Env.schema.string(),
+  SPACES_KEY: Env.schema.string(),
+  SPACES_ENDPOINT: Env.schema.string({ format: 'url' }),
 })
