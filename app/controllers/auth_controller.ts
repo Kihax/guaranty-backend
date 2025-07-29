@@ -124,13 +124,17 @@ export default class AuthController {
         }
       )
       // If the user does not have a profile picture, update it
-      if (
-        user.profilePicture === null ||
-        user.profilePicture === '' ||
-        user.profilePicture === undefined ||
-        user.profilePicture === 'default-profile-picture.avif'
-      ) {
-        await ProfilePicturesController.update(picture, user)
+      try {
+        if (
+          user.profilePicture === null ||
+          user.profilePicture === '' ||
+          user.profilePicture === undefined ||
+          user.profilePicture === 'default-profile-picture.avif'
+        ) {
+          await ProfilePicturesController.update(picture, user)
+        }
+      } catch (error) {
+        console.error('Error updating profile picture:', error)
       }
 
       const token = await User.accessTokens.create(user)
