@@ -21,13 +21,13 @@ export default class UploadFilesController {
 
   public static async downloadFile({ response }: HttpContext, fileName: string) {
     const disk = drive.use('spaces')
-    const file = await disk.get(fileName)
+    const stream = await disk.getStream(filePath)
     if (!file) {
       return response.notFound({ message: 'File not found' })
     }
     const fileMetaData = await disk.getMetaData(fileName)
 
     console.log(fileMetaData)
-    response.send(file)
+    return response.stream(stream)
   }
 }
