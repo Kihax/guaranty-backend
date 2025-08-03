@@ -141,6 +141,8 @@ export default class ItemsController {
     const buffer = fs.readFileSync(receipt.tmpPath!)
     const file = new File([buffer], fileName, { type: receipt.type })
     await UploadFilesController.uploadFile(file)
+    ticket.receiptUrl = fileName
+
     await ticket.save()
 
     return response.created(ticket)
