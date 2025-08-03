@@ -46,6 +46,7 @@ export default class ItemsController {
       }
       const extension = receipt.extname || 'jpg'
       const fileName = `ticket-${ticket.id}.${extension}`
+      ticket.receiptUrl = fileName
 
       // Read file buffer from tmpPath
       const buffer = fs.readFileSync(receipt.tmpPath!)
