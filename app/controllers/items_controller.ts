@@ -84,7 +84,7 @@ export default class ItemsController {
       return httpContext.response.notFound({ message: 'Aucun ticket de caisse associé.' })
     }
 
-    UploadFilesController.downloadFile(httpContext, ticket.receiptUrl)
+    return UploadFilesController.downloadFile(httpContext, ticket.receiptUrl)
   }
 
   async store({ request, auth, response }: HttpContext) {
