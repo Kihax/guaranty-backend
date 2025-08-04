@@ -66,6 +66,7 @@ router
         router.get('/image/:id', [ItemsController, 'image'])
         router.post('/update/:id', [ItemsController, 'update'])
         router.get('/get/:id', [ItemsController, 'get'])
+        router.delete('/delete/:id', [ItemsController, 'delete'])
       })
       .prefix('/items')
       .use(

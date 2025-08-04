@@ -160,4 +160,24 @@ export default class ItemsController {
 
     return response.json(ticket)
   }
+
+  async delete({ params, auth, response }: HttpContext) {
+    const user = await auth.getUserOrFail()
+    const { id } = params
+
+    // Vérifie que l'utilisateur est bien le propriétaire du ticket
+    const ticket = await WarrantyTicket.query()
+      .where('id', id)
+      .where('user_id', user.id)
+      .firstOrFail()
+
+    // Supprime le fichier associé au ticket
+    if (ticket.receiptUrl) {
+      await UploadFilesController.deleteFile(ticket.receiptUrl)
+    }
+
+    await ticket.delete()
+
+    return response.noContent()
+  }
 }

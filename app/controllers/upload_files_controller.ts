@@ -30,4 +30,14 @@ export default class UploadFilesController {
     console.log(fileMetaData)
     return response.stream(stream)
   }
+
+  public static async deleteFile(fileName: string) {
+    const disk = drive.use('spaces')
+    const exists = await disk.exists(fileName)
+    if (!exists) {
+      throw new Error('File not found')
+    }
+    await disk.delete(fileName)
+    return { message: 'File deleted successfully' }
+  }
 }
