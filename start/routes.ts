@@ -12,6 +12,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const ProfilePicturesController = () => import('#controllers/profile_pictures_controller')
 const ItemsController = () => import('#controllers/items_controller')
 import { middleware } from '#start/kernel'
+const ProfilesController = () => import('#controllers/profiles_controller')
 
 router.get('/test', async () => {
   return {
@@ -37,7 +38,7 @@ router
         router.post('/login-with-google', [AuthController, 'loginWithGoogle'])
         router.post('/forgot-password', [AuthController, 'forgotPassword'])
         router.post('/reset-password', [AuthController, 'resetPassword'])
-        router.get('/user', [AuthController, 'getUser']).use(
+        router.get('/user', [ProfilesController, 'getUser']).use(
           // lien sécurisé
           middleware.auth({
             guards: ['api'],
@@ -49,13 +50,19 @@ router
             guards: ['api'],
           })
         )
-        router.get('/get-profile-picture', [ProfilePicturesController, 'image']).use(
+        router.get('/profile/picture', [ProfilePicturesController, 'image']).use(
           // lien sécurisé
           middleware.auth({
             guards: ['api'],
           })
         )
-        router.post('/profile/update', [AuthController, 'updateProfile']).use(
+        router.post('/profile/update', [ProfilesController, 'updateProfile']).use(
+          // lien sécurisé
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
+        router.delete('/profile/delete', [ProfilesController, 'delete']).use(
           // lien sécurisé
           middleware.auth({
             guards: ['api'],
