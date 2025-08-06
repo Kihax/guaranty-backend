@@ -55,6 +55,12 @@ router
             guards: ['api'],
           })
         )
+        router.post('/profile/update', [AuthController, 'updateProfile']).use(
+          // lien sécurisé
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
       })
       .prefix('/auth')
 

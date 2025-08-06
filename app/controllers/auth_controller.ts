@@ -12,6 +12,8 @@ import crypto from 'node:crypto'
 import PasswordResetToken from '#models/password_reset_token'
 import ResetPasswordNotification from '#mails/reset_password_notification'
 import ProfilePicturesController from './profile_pictures_controller.js'
+import fs from 'node:fs'
+import UploadFilesController from './upload_files_controller.js'
 
 export default class AuthController {
   public async register({ request }: HttpContext) {
@@ -266,6 +268,45 @@ export default class AuthController {
       email: user.email,
       fullName: user.fullName,
       emailVerified: user.emailVerified,
+    }
+  }
+
+  public async updateProfile({ request, auth: authCtx, response }: HttpContext) {
+    const user = await authCtx.getUserOrFail()
+    const data = request.only(['fullName'])
+
+    const image = request.file('profileImage', {
+      size: '2mb',
+      extnames: ['jpg', 'jpeg', 'png', 'pdf'],
+    })
+
+    if (image) {
+      if (!image.isValid) {
+        return response.badRequest({ errors: image.errors })
+      }
+
+      // Vérifie si l'image est valide
+      const ext = image.extname || 'jpg'
+      const fileName = `profile_${user.id}_${Date.now()}${ext}`
+
+      // Read file buffer from tmpPath
+      const buffer = fs.readFileSync(image.tmpPath!)
+      const file = new File([buffer], fileName, { type: image.type })
+      await UploadFilesController.uploadFile(file)
+      user.profilePicture = fileName
+    }
+
+    user.fullName = data.fullName || user.fullName
+    await user.save()
+
+    return {
+      message: 'Profil mis à jour avec succès',
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        profilePicture: user.profilePicture || 'default-profile-picture.avif',
+      },
     }
   }
 }
