@@ -287,7 +287,7 @@ export default class AuthController {
 
       // Vérifie si l'image est valide
       const ext = image.extname || 'jpg'
-      const fileName = `profile_${user.id}_${Date.now()}${ext}`
+      const fileName = `profile_${user.id}.${ext}`
 
       // Read file buffer from tmpPath
       const buffer = fs.readFileSync(image.tmpPath!)

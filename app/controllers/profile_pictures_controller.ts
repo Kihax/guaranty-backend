@@ -11,7 +11,7 @@ export default class ProfilePicturesController {
     if (!res.ok) throw new Error('Failed to download image')
 
     const ext = path.extname(new URL(url).pathname).split('?')[0] || '.jpg'
-    const fileName = `profile_${user.id}_${Date.now()}${ext}`
+    const fileName = `profile_${user.id}.${ext}`
 
     const buffer = Buffer.from(await res.arrayBuffer())
 
