@@ -121,7 +121,7 @@ export default class AuthController {
           fullName: name,
           password: crypto.randomUUID(),
           emailVerified: true,
-          profilePicture: picture || 'default-profile-picture.avif',
+          profilePicture: 'default-profile-picture.avif',
         }
       )
       // If the user does not have a profile picture, update it
@@ -132,9 +132,7 @@ export default class AuthController {
           user.profilePicture === undefined ||
           user.profilePicture === 'default-profile-picture.avif'
         ) {
-          console.log(picture, user)
           const profilePicture = await ProfilePicturesController.update(picture, user)
-          console.log('Profile picture updated:', profilePicture)
         }
       } catch (error) {
         console.error('Error updating profile picture:', error)
@@ -150,7 +148,7 @@ export default class AuthController {
           email: user.email,
           fullName: user.fullName,
           emailVerified: user.emailVerified,
-          profilePicture: user.profilePicture || picture || 'default-profile-picture.avif',
+          profilePicture: user.profilePicture || 'default-profile-picture.avif',
         },
       }
     } catch (error) {
