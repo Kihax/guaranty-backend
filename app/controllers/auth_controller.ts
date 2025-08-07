@@ -132,7 +132,7 @@ export default class AuthController {
           user.profilePicture === undefined ||
           user.profilePicture === 'default-profile-picture.avif'
         ) {
-          const profilePicture = await ProfilePicturesController.update(picture, user)
+          await ProfilePicturesController.update(picture, user)
         }
       } catch (error) {
         console.error('Error updating profile picture:', error)
@@ -148,7 +148,6 @@ export default class AuthController {
           email: user.email,
           fullName: user.fullName,
           emailVerified: user.emailVerified,
-          profilePicture: user.profilePicture || 'default-profile-picture.avif',
         },
       }
     } catch (error) {
